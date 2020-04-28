@@ -21,7 +21,6 @@ d3.csv(dataPath)
                         return d.type;
                 })
                 .entries(data);
-                console.log(groupType);
 
                 //Draw a Rectangle for each group
                 d3.select("svg")

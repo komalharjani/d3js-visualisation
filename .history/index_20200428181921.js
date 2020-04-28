@@ -30,7 +30,7 @@ d3.csv(dataPath)
                 .enter()
                 .append("rect")
                         .attr("width", function(d){
-                                return d.amount;
+                                return d.groupType;
                         })
                         .attr("height",20)
                         .attr("x",50)

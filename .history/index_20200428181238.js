@@ -15,15 +15,6 @@ d3.csv(dataPath)
                 });
                 console.log(energyBoundaries);
 
-                //Group by Type
-                let groupType = d3.nest()
-                .key(function(d){
-                        return d.type;
-                })
-                .entries(data);
-                console.log(groupType);
-
-                //Draw a Rectangle for each group
                 d3.select("svg")
                 .selectAll("rect")
                 .data(data)
@@ -35,7 +26,7 @@ d3.csv(dataPath)
                         .attr("height",20)
                         .attr("x",50)
                         .attr("y", function(d,i){
-                                return i*50 + 50;
+                                
                         })
 // let svgWidth = 500; 
 // let svgHeight = 300;

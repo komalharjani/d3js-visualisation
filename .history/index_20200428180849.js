@@ -2,6 +2,9 @@
 let dataPath = "data/energy.csv";
 d3.csv(dataPath)
         .then(function (data) {
+                // for (let i = 0; i < data.length; i++) {
+                //         //console.log(data[i].YEAR);
+                // }
 
                 //Year Boundaries (1990-2018)
                 let dateBoundaries = d3.extent(data, function (d) {
@@ -15,15 +18,6 @@ d3.csv(dataPath)
                 });
                 console.log(energyBoundaries);
 
-                //Group by Type
-                let groupType = d3.nest()
-                .key(function(d){
-                        return d.type;
-                })
-                .entries(data);
-                console.log(groupType);
-
-                //Draw a Rectangle for each group
                 d3.select("svg")
                 .selectAll("rect")
                 .data(data)

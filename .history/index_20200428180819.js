@@ -2,6 +2,9 @@
 let dataPath = "data/energy.csv";
 d3.csv(dataPath)
         .then(function (data) {
+                // for (let i = 0; i < data.length; i++) {
+                //         //console.log(data[i].YEAR);
+                // }
 
                 //Year Boundaries (1990-2018)
                 let dateBoundaries = d3.extent(data, function (d) {
@@ -15,52 +18,43 @@ d3.csv(dataPath)
                 });
                 console.log(energyBoundaries);
 
-                //Group by Type
-                let groupType = d3.nest()
-                .key(function(d){
-                        return d.type;
-                })
-                .entries(data);
-                console.log(groupType);
-
-                //Draw a Rectangle for each group
                 d3.select("svg")
                 .selectAll("rect")
                 .data(data)
                 .enter()
                 .append("rect")
                         .attr("width", function(d){
-                                return d.amount;
+                                 
                         })
                         .attr("height",20)
                         .attr("x",50)
                         .attr("y", function(d,i){
                                 return i*50 + 50;
                         })
-// let svgWidth = 500; 
-// let svgHeight = 300;
-// let barPadding = 5;
-// let barWidth = (svgWidth / data.length);
+let svgWidth = 500; 
+let svgHeight = 300;
+let barPadding = 5;
+let barWidth = (svgWidth / data.length);
 
-// let svg = d3.select('svg')
-//     .attr("width", svgWidth)
-//     .attr("height", svgHeight);
+let svg = d3.select('svg')
+    .attr("width", svgWidth)
+    .attr("height", svgHeight);
 
-// let barChart = svg.selectAll("rect")
-//     .data(data)
-//     .enter()
-//     .append("rect")
-//     .attr("y", function(d){
-//         return svgHeight - d;
-//     })
-//     .attr("height", function(d){
-//         return d;
-//     })
-//     .attr("width",barWidth - barPadding)
-//     .attr("transform", function(d, i){
-//         let translate = [barWidth*i, 0];
-//         return "translate("+ translate +")";
-//     });
+let barChart = svg.selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("y", function(d){
+        return svgHeight - d;
+    })
+    .attr("height", function(d){
+        return d;
+    })
+    .attr("width",barWidth - barPadding)
+    .attr("transform", function(d, i){
+        let translate = [barWidth*i, 0];
+        return "translate("+ translate +")";
+    });
 
 // let text = svg.selectAll("text")
 //     .data(data)

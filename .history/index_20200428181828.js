@@ -26,7 +26,7 @@ d3.csv(dataPath)
                 //Draw a Rectangle for each group
                 d3.select("svg")
                 .selectAll("rect")
-                .data(data)
+                .data(groupType)
                 .enter()
                 .append("rect")
                         .attr("width", function(d){
