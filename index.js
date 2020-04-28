@@ -10,71 +10,48 @@ d3.csv(dataPath)
                 console.log(dateBoundaries);
 
                 //Energy Boundaries
-                let energyBoundaries = d3.extent(data, function(d){
+                let energyBoundaries = d3.extent(data, function (d) {
                         return parseFloat(d.amount);
                 });
                 console.log(energyBoundaries);
 
                 //Group by Type
                 let groupType = d3.nest()
-                .key(function(d){
-                        return d.type;
-                })
-                .entries(data);
+                        .key(function (d) {
+                                return d.type;
+                        })
+                        .entries(data);
                 console.log(groupType);
 
-                //Draw a Rectangle for each group
-                d3.select("svg")
-                .selectAll("rect")
-                .data(data)
-                .enter()
-                .append("rect")
-                        .attr("width", function(d){
-                                return d.amount;
+                //Average Amount by Type
+                var energyAvgType = d3.nest()
+                        .key(function (d) { return d.type; })
+                        .rollup(function (v) { return d3.mean(v, function (d) { return d.amount; }); })
+                        .entries(data);
+                console.log(JSON.stringify(energyAvgType));
+                for (let i = 0; i < energyAvgType.length; i++) {
+                        console.log(Math.floor(energyAvgType[i].value));
+                }
+
+                //Group by region
+                let groupRegion = d3.nest()
+                        .key(function (d) {
+                                return d.region;
                         })
-                        .attr("height",20)
-                        .attr("x",50)
-                        .attr("y", function(d,i){
-                                return i*50 + 50;
-                        })
-// let svgWidth = 500; 
-// let svgHeight = 300;
-// let barPadding = 5;
-// let barWidth = (svgWidth / data.length);
+                        .entries(data);
+                console.log(groupRegion);
 
-// let svg = d3.select('svg')
-//     .attr("width", svgWidth)
-//     .attr("height", svgHeight);
+                var svg = d3.select("svg"),
+                        margin = 200,
+                        width = svg.attr("width") - margin,
+                        height = svg.attr("height") - margin;
 
-// let barChart = svg.selectAll("rect")
-//     .data(data)
-//     .enter()
-//     .append("rect")
-//     .attr("y", function(d){
-//         return svgHeight - d;
-//     })
-//     .attr("height", function(d){
-//         return d;
-//     })
-//     .attr("width",barWidth - barPadding)
-//     .attr("transform", function(d, i){
-//         let translate = [barWidth*i, 0];
-//         return "translate("+ translate +")";
-//     });
 
-// let text = svg.selectAll("text")
-//     .data(data)
-//     .enter()
-//     .append("text")
-//     .text(function(d){
-//         return d;
-//     })
-//     .attr("y", function(d,i){
-//         return svgHeight - d - 2;
-//     })
-//     .attr("x", function(d,i){
-//         return barWidth * i; 
-//     })
-//     .attr("fill", "#A64C38");
-
-});
+                //Average Amount by Type
+                var energyAvgRegion = d3.nest()
+                        .key(function (d) { return d.region; })
+                        .rollup(function (v) { return d3.mean(v, function (d) { return d.amount; }); })
+                        .entries(data);
+                let toJSON = JSON.stringify(energyAvgRegion);
+                console.log(toJSON);
+        });
