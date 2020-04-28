@@ -55,8 +55,6 @@ d3.csv(dataPath)
                 let toJSON = JSON.stringify(energyAvgRegion);
                 console.log(toJSON);
 
+
                 //INSERT BAR CHART HERE
-
-                //INSERT FILTERS
-
         });
