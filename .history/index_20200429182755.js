@@ -70,12 +70,12 @@ d3.csv(dataPath)
                         .enter()
                         .append("rect")
                         .attr("y", function (d) {
-                                return height - xscale(d.amount);
+                                return height - xscale(d.amount;
                         })
                         .attr("height", function (d) {
                                 return xscale(d.amount);
                         })
-                        .attr("width", barwidth - 5)
+                        .attr("width", barwidth - 2)
                         .attr("transform", function (d, i) {
                                 let translate = [barwidth * i,-30];
                                 return "translate(" + translate + ")";

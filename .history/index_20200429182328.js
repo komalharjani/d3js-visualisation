@@ -65,7 +65,7 @@ d3.csv(dataPath)
                 //         .call(x_axis)
 
                 //Barchart
-                svg.selectAll("body") //add rectangles to all data
+                let barChart = svg.selectAll("rect") //add rectangles to all data
                         .data(finals) //provide finals as dataset
                         .enter()
                         .append("rect")
@@ -75,9 +75,10 @@ d3.csv(dataPath)
                         .attr("height", function (d) {
                                 return xscale(d.amount);
                         })
-                        .attr("width", barwidth - 5)
+                        .attr("width", barwidth)
+                        //problem is here with displaying axis and
                         .attr("transform", function (d, i) {
-                                let translate = [barwidth * i,-30];
+                                let translate = [barwidth * i,0];
                                 return "translate(" + translate + ")";
                         })
                         .attr("fill", 'black');

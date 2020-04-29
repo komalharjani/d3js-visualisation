@@ -52,7 +52,7 @@ d3.csv(dataPath)
                         .scale(yscale);
 
                 svg.append("g")
-                        .attr("transform", "translate(100,-30)")
+                        .attr("transform", "translate(10,30)")
                         .call(y_axis)
 
 
@@ -75,7 +75,7 @@ d3.csv(dataPath)
                         .attr("height", function (d) {
                                 return xscale(d.amount);
                         })
-                        .attr("width", barwidth - 5)
+                        .attr("width", barwidth - 2)
                         .attr("transform", function (d, i) {
                                 let translate = [barwidth * i,-30];
                                 return "translate(" + translate + ")";

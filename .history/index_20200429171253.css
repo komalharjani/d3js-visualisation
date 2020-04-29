@@ -12,6 +12,7 @@ body {
     background-color: aquamarine;
 }
 
-.bar {
+svg:not(:root) {
     background-color: aquamarine;
+    
 }

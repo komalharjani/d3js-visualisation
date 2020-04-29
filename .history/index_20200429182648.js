@@ -28,7 +28,6 @@ d3.csv(dataPath)
 
                 //Append to HTML Document
                 let svg = d3.select("body")
-                        .append("svg")
                         .attr("height", height)
                         .attr("width", width);
 
@@ -75,7 +74,7 @@ d3.csv(dataPath)
                         .attr("height", function (d) {
                                 return xscale(d.amount);
                         })
-                        .attr("width", barwidth - 5)
+                        .attr("width", barwidth - 2)
                         .attr("transform", function (d, i) {
                                 let translate = [barwidth * i,-30];
                                 return "translate(" + translate + ")";

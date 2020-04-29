@@ -46,24 +46,6 @@ d3.csv(dataPath)
                 // .domain(data.map(d => d.type))
                 // .range(0, width);
 
-                //Axis
-
-                let y_axis = d3.axisLeft()
-                        .scale(yscale);
-
-                svg.append("g")
-                        .attr("transform", "translate(100,-30)")
-                        .call(y_axis)
-
-
-                //X Axis
-                // let x_axis = d3.axisBottom()
-                //         .scale(xscale);
-                // let xAxisTranslate = height - 30;
-                // svg.append("g")
-                //         .attr("transform", "translate(100, " + xAxisTranslate + ")")
-                //         .call(x_axis)
-
                 //Barchart
                 svg.selectAll("body") //add rectangles to all data
                         .data(finals) //provide finals as dataset
@@ -75,12 +57,30 @@ d3.csv(dataPath)
                         .attr("height", function (d) {
                                 return xscale(d.amount);
                         })
-                        .attr("width", barwidth - 5)
+                        .attr("width", barwidth - 2)
                         .attr("transform", function (d, i) {
                                 let translate = [barwidth * i,-30];
                                 return "translate(" + translate + ")";
                         })
                         .attr("fill", 'black');
+
+                           //Axis
+
+                let y_axis = d3.axisLeft()
+                .scale(yscale);
+
+        svg.append("g")
+                .attr("transform", "translate(100,-30)")
+                .call(y_axis)
+
+
+        //X Axis
+        // let x_axis = d3.axisBottom()
+        //         .scale(xscale);
+        // let xAxisTranslate = height - 30;
+        // svg.append("g")
+        //         .attr("transform", "translate(100, " + xAxisTranslate + ")")
+        //         .call(x_axis)
 
                 // Barchart Text
                 // let text = svg.selectAll("text")

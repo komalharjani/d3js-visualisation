@@ -16,7 +16,7 @@ d3.csv(dataPath)
                 }
                 console.log(finals);
 
-                let width = 1000;
+                let width = 500;
                 let height = 500;
                 let margin = {
                         top: 20,
@@ -35,11 +35,11 @@ d3.csv(dataPath)
                 //Scales
                 let xscale = d3.scaleLinear()
                         .domain([0, d3.max(finals, d => d.amount)])
-                        .range([0, width]);
+                        .range([0, height]);
 
                 let yscale = d3.scaleLinear()
                         .domain([0, d3.max(finals, d => d.amount)])
-                        .range([height, 0]);
+                        .range([width-30, 0]);
 
                 // text scales
                 // let yscale = d3.scaleBand()
@@ -57,15 +57,16 @@ d3.csv(dataPath)
 
 
                 //X Axis
-                // let x_axis = d3.axisBottom()
-                //         .scale(xscale);
-                // let xAxisTranslate = height - 30;
-                // svg.append("g")
-                //         .attr("transform", "translate(100, " + xAxisTranslate + ")")
-                //         .call(x_axis)
+                let x_axis = d3.axisBottom()
+                        .scale(xscale);
+                let xAxisTranslate = height - 30;
+                svg.append("g")
+                        .attr("transform", "translate(100, " + xAxisTranslate + ")")
+                        .call(x_axis)
+
 
                 //Barchart
-                svg.selectAll("body") //add rectangles to all data
+                let barChart = svg.selectAll("rect") //add rectangles to all data
                         .data(finals) //provide finals as dataset
                         .enter()
                         .append("rect")
@@ -75,9 +76,10 @@ d3.csv(dataPath)
                         .attr("height", function (d) {
                                 return xscale(d.amount);
                         })
-                        .attr("width", barwidth - 5)
+                        .attr("width", barwidth - 3)
+                        //problem is here with displaying axis and
                         .attr("transform", function (d, i) {
-                                let translate = [barwidth * i,-30];
+                                let translate = [barwidth * i, -30];
                                 return "translate(" + translate + ")";
                         })
                         .attr("fill", 'black');

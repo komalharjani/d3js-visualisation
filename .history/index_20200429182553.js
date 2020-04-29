@@ -65,7 +65,7 @@ d3.csv(dataPath)
                 //         .call(x_axis)
 
                 //Barchart
-                svg.selectAll("body") //add rectangles to all data
+                svg.selectAll("g") //add rectangles to all data
                         .data(finals) //provide finals as dataset
                         .enter()
                         .append("rect")
@@ -75,7 +75,7 @@ d3.csv(dataPath)
                         .attr("height", function (d) {
                                 return xscale(d.amount);
                         })
-                        .attr("width", barwidth - 5)
+                        .attr("width", barwidth - 2)
                         .attr("transform", function (d, i) {
                                 let translate = [barwidth * i,-30];
                                 return "translate(" + translate + ")";
