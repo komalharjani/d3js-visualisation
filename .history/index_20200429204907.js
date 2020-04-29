@@ -1,4 +1,4 @@
-//1. What the bar chart should represent -- Data
+//1. What the bar chart should represent
 //2. Add CSS - colours
 //3. Add Filters
 //4. Add Transitions
@@ -12,28 +12,23 @@ d3.csv(dataPath)
                 console.log(data);
 
                 //Filter Data into new object
-                for (let i = 0; i < data.length; i++) {
-                        if (data[i].region == "Combined" && data[i].year == 1990) {
-                                finals.push({
-                                        amount: parseInt(data[i].amount),
-                                        type: data[i].energySrc,
-                                })
-                        }
-                }
+                // for (let i = 0; i < data.length; i++) {
+                //         if (data[i].region == "Combined" && data[i].year == 1990) {
+                //                 temp.push({
+                //                         amount: parseInt(data[i].amount),
+                //                         type: data[i].energySrc,
+                //                 })
+                //         }
+                // }
                 //console.log(finals);
 
                 for(let j=0; j < data.length; j++) {
-                        let year = 1990;
-                        if(data[j].year == year) {
-                        if(data[j].energySrc == "Coal" || data[j].energySrc == "Petroleum") {
-                                temp.push({
+                        if(data[j].year == 1990 && data[j].region == "Midwest") {
+                                finals.push({
                                         amount: parseInt(data[j].amount),
-                                        type: data[j].energySrc,
-                                        region: data[j].region
+                                        src: data[j].energySrc,
                                 })
                         }
-                        year = year + 1;
-                }
                 }
                 console.log(temp);
 

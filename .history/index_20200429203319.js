@@ -1,4 +1,4 @@
-//1. What the bar chart should represent -- Data
+//1. What the bar chart should represent
 //2. Add CSS - colours
 //3. Add Filters
 //4. Add Transitions
@@ -8,7 +8,7 @@ d3.csv(dataPath)
         .then(function (data) {
 
                 let finals = [];
-                let temp = [];
+
                 console.log(data);
 
                 //Filter Data into new object
@@ -20,23 +20,7 @@ d3.csv(dataPath)
                                 })
                         }
                 }
-                //console.log(finals);
-
-                for(let j=0; j < data.length; j++) {
-                        let year = 1990;
-                        if(data[j].year == year) {
-                        if(data[j].energySrc == "Coal" || data[j].energySrc == "Petroleum") {
-                                temp.push({
-                                        amount: parseInt(data[j].amount),
-                                        type: data[j].energySrc,
-                                        region: data[j].region
-                                })
-                        }
-                        year = year + 1;
-                }
-                }
-                console.log(temp);
-
+                console.log(finals);
 
                 let width = 1000;
                 let height = 500;
@@ -155,7 +139,7 @@ d3.csv(dataPath)
                         })
                         .entries(data);
                 usTotal.shift();
-                console.log(usTotal);
+                console.log(usTotal[0]);
 
 
         });

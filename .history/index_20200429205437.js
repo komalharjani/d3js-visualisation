@@ -1,4 +1,4 @@
-//1. What the bar chart should represent -- Data
+//1. What the bar chart should represent
 //2. Add CSS - colours
 //3. Add Filters
 //4. Add Transitions
@@ -32,7 +32,7 @@ d3.csv(dataPath)
                                         region: data[j].region
                                 })
                         }
-                        year = year + 1;
+                        year++;
                 }
                 }
                 console.log(temp);
