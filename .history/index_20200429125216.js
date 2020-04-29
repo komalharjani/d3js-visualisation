@@ -51,7 +51,7 @@ d3.csv(dataPath)
                 usTotal.shift();
                 console.log(usTotal);
 
-                //Average Totals by Year -- Final for Bar Chart
+                //Average Amount by Region
                 var energyAvgRegion = d3.nest()
                         .key(function (d) { 
                                 if(d.region == "Combined") {
@@ -64,10 +64,8 @@ d3.csv(dataPath)
                                 }); 
                         })
                         .entries(data);
-                energyAvgRegion.shift();
                 let toJSON = JSON.stringify(energyAvgRegion);
                 console.log(toJSON);
-
 
                 //INSERT BAR CHART HERE
 

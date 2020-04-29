@@ -40,34 +40,37 @@ d3.csv(dataPath)
                 }
 
                 /**
-                 * Combined USTOTAL Energy Use split by year
+                 * Combined USTOTAL Energy Use
+                 * Delete "undefined"
                  */
-                let usTotal = d3.nest()
+                let groupRegion = d3.nest()
+                        .key(function (d) {
+                                if(d.region === "Combined") {
+                                return d.region;
+                                }
+                        })
+                        .entries(data);
+                //let usTotal = groupRegion[1]; //without undefined
+                //console.log(usTotal); //split by type
+
+                let groupByYear = d3.nest()
                 .key(function(d){
                         if(d.region == "Combined") 
                         { return d.year}
                 })
                 .entries(data);
-                usTotal.shift();
-                console.log(usTotal);
+                console.log(groupByYear);
+                delete groupByYear[0];
+                console.log(groupByYear);
+                groupByYear.shift();
 
-                //Average Totals by Year -- Final for Bar Chart
+                //Average Amount by Region
                 var energyAvgRegion = d3.nest()
-                        .key(function (d) { 
-                                if(d.region == "Combined") {
-                                return d.year; 
-                                }
-                        })
-                        .rollup(function (v) { 
-                                return d3.mean(v, function (d) { 
-                                        return d.amount; 
-                                }); 
-                        })
+                        .key(function (d) { return d.region; })
+                        .rollup(function (v) { return d3.mean(v, function (d) { return d.amount; }); })
                         .entries(data);
-                energyAvgRegion.shift();
                 let toJSON = JSON.stringify(energyAvgRegion);
                 console.log(toJSON);
-
 
                 //INSERT BAR CHART HERE
 

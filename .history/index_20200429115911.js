@@ -40,34 +40,24 @@ d3.csv(dataPath)
                 }
 
                 /**
-                 * Combined USTOTAL Energy Use split by year
+                 * Combined USTOTAL Energy Use
                  */
-                let usTotal = d3.nest()
-                .key(function(d){
-                        if(d.region == "Combined") 
-                        { return d.year}
-                })
-                .entries(data);
-                usTotal.shift();
-                console.log(usTotal);
-
-                //Average Totals by Year -- Final for Bar Chart
-                var energyAvgRegion = d3.nest()
-                        .key(function (d) { 
-                                if(d.region == "Combined") {
-                                return d.year; 
+                let groupRegion = d3.nest()
+                        .key(function (d) {
+                                if(d.region === "Combined") {
+                                return d.region;
                                 }
                         })
-                        .rollup(function (v) { 
-                                return d3.mean(v, function (d) { 
-                                        return d.amount; 
-                                }); 
-                        })
                         .entries(data);
-                energyAvgRegion.shift();
+                console.log(groupRegion); //GET COMBINED BY YEAR + split by type
+
+                //Average Amount by Region
+                var energyAvgRegion = d3.nest()
+                        .key(function (d) { return d.region; })
+                        .rollup(function (v) { return d3.mean(v, function (d) { return d.amount; }); })
+                        .entries(data);
                 let toJSON = JSON.stringify(energyAvgRegion);
                 console.log(toJSON);
-
 
                 //INSERT BAR CHART HERE
 
