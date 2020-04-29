@@ -78,7 +78,7 @@ d3.csv(dataPath)
                         })
                         .attr("width", barwidth - 5)
                         .attr("transform", function (d, i) {
-                                let translate = [100 + barwidth * i,-30];
+                                let translate = [30 + barwidth * i,-30];
                                 return "translate(" + translate + ")";
                         }) 
                         .attr("fill", 'black');

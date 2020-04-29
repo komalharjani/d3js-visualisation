@@ -41,8 +41,8 @@ d3.csv(dataPath)
                         .domain([0, d3.max(finals, d => d.amount)])
                         .range([height, 0]);
 
-                //text scales
-                let yscales = d3.scaleBand()
+                text scales
+                let yscale = d3.scaleBand()
                 .domain(data.map(d => d.type))
                 .range(0, width);
 
@@ -60,10 +60,9 @@ d3.csv(dataPath)
                 // let x_axis = d3.axisBottom()
                 //         .scale(xscale);
                 // let xAxisTranslate = height - 30;
-
                 // svg.append("g")
-                //         .attr("transform", "translate(100,30)")
-                //         .call(yscales)
+                //         .attr("transform", "translate(100, " + xAxisTranslate + ")")
+                //         .call(x_axis)
 
                 //Barchart
                 svg.selectAll("body") //add rectangles to all data
@@ -78,9 +77,9 @@ d3.csv(dataPath)
                         })
                         .attr("width", barwidth - 5)
                         .attr("transform", function (d, i) {
-                                let translate = [100 + barwidth * i,-30];
+                                let translate = [barwidth * i,-30];
                                 return "translate(" + translate + ")";
-                        }) 
+                        })
                         .attr("fill", 'black');
 
                 // Barchart Text

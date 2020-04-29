@@ -78,9 +78,9 @@ d3.csv(dataPath)
                         })
                         .attr("width", barwidth - 5)
                         .attr("transform", function (d, i) {
-                                let translate = [100 + barwidth * i,-30];
+                                let translate = [barwidth * i,x];
                                 return "translate(" + translate + ")";
-                        }) 
+                        })
                         .attr("fill", 'black');
 
                 // Barchart Text
