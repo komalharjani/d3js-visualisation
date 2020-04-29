@@ -25,6 +25,10 @@ d3.csv(dataPath)
                                 });
                         })
                         .entries(data);
+                console.log(JSON.stringify(energyAvgType));
+                for (let i = 0; i < energyAvgType.length; i++) {
+                        console.log(Math.floor(energyAvgType[i].value));
+                }
 
                 /**
                  * Combined USTOTAL Energy Use split by year, type and energy source
@@ -44,5 +48,11 @@ d3.csv(dataPath)
                 console.log(usTotal);
 
                 //INSERT BAR CHART HERE
+
+                //INSERT FILTERS
+                var svg = d3.select("svg"),
+                        margin = 200,
+                        width = svg.attr("width") - margin,
+                        height = svg.attr("height") - margin;
 
         });
