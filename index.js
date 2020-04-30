@@ -31,8 +31,6 @@ d3.csv(dataPath)
 
 
 
-                var totalWest = 0;
-                var totalWind = 0;
 
                 //Grouping by region
                 // from line 1 to line 51,630 "j's"
@@ -48,7 +46,7 @@ d3.csv(dataPath)
                                                         amount: parseInt(data[j].amount)
                                                 })
                                                 console.log("End of WEST");
-                                                totalWest = data[j].amount++; //all energy from west gen.
+                                               
                                                
                                              
                                         } 
@@ -99,6 +97,7 @@ d3.csv(dataPath)
 
                                 }
                 }
+                console.log(westArray);
                 
 
                 
