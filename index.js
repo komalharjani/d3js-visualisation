@@ -5,28 +5,34 @@
 
 
 
-// Var controls counter
+// This controls counter displayed
 var counter = 1990;
 document.getElementById("counter").innerHTML = counter;
 
 
+//vars for totals
+var year = 1989; 
+var coal = 0;
+var petrol = 0;
+var gas = 0;
 
 let dataPath = "data/energy.csv";
 d3.csv(dataPath)
         .then(function (data) {
 
-                //console.log(data);
-
                 //Nested Data with all Data Required - need to figure out how to unpack and build bar chart
-
                 var nestedData = d3.nest()
                         .key(function (d) {
-                                return d.year;
-                        })
-                        .key(function (d) {
-                                if (d.region != "combined" && d.type == "Total Electric Power Industry") {
+
+                                if (d.type != "combined" && d.type == "Total Electric Power Industry") {
                                         return d.region;
                                 }
+                               
+                        })
+                        .key(function (d) {
+                                year++; //next year
+                                return d.year;
+                                
                         })
                         .key(function (d) {
                                 if (d.energySrc == "Coal" || d.energySrc == "Petroleum" || d.energySrc == "Natural Gas" || d.energySrc == "Solar Thermal and Photovoltaic") {
@@ -34,65 +40,20 @@ d3.csv(dataPath)
                                 }
                         })
                         .rollup(function (v) {
-                                console.log(v.energySrc);
                                 return {
-                                        //energy: v.energySrc,
                                         avg: d3.mean(v, function (d) {
                                                 return parseInt(d.amount);
                                         })
                                 };
                         })
                         .entries(data);
-                //console.log(nestedData);
-                let nestedDataJSON = JSON.stringify(nestedData);
-                //console.log(nestedDataJSON);
-                
-                let dataAfterNest = [];
+                console.log(nestedData);
+                let nestedDataJSON = JSON.stringify(nestedData, null, 2);
+                console.log (nestedDataJSON);
 
-                //Object - 18 elements 
-                // each element should have dataAfterNest for each year
-
-                
-                let getNestedData = nestedData.forEach(function(d){ //d = year
-                        let yearLevel = [];
-                        if(d.key == 1990) {
-                        yearLevel.push({year: d.key});
-                        (d.values).forEach(function(e){ //e = region
-                                (e.values).forEach(function(f){ //f = energySrc
-                                        dataAfterNest.push({
-                                                energy: f.key,
-                                                avg: f.value.avg,
-                                                region: e.key,
-                                                year: d.key
-                                        })
-                                })
-                                        // dataAfterNest.push({
-                                        //         f.key: f.value.avg
-                                        // })
-                                        //return {f.key: f.value.avg};
-                                
-                                        //put all of the values in this array 
-                        }) 
-                }
-                });
-                console.log(getNestedData);
-                console.log(dataAfterNest);
-
-
-
-
-
-
-
-                //OR nest by year after this
-                //Scale Bands for bar chart --> categorical (x), amount (y)
-                //First scale for region and second for energy - create nested scale
-                
-
-
-
-
-
+                // Whats this?
+                //var eachPain = d3.values(nestedData[0]).values[0];
+                //console.log(eachPain);
 
 let randomData = [];
 
@@ -118,6 +79,11 @@ let svg = d3.select("body")
         .attr("height", height)
         .attr("width", width);
 
+
+
+
+
+
 /**
  * Scales and Axis
  */
@@ -135,7 +101,7 @@ let yAxisScale = d3.scaleLinear()
 let y_axis = d3.axisLeft().scale(yAxisScale);
 svg.append("g")
         .attr("transform", "translate(100,-30)")
-        .call(y_axis);
+        .call(y_axis)
 
 //X Axis - Ordinal
 // let x_axis = d3.axisBottom().scale(xscale);
@@ -145,23 +111,22 @@ svg.append("g")
 
 
 //Barchart
-//NEED TICKS
-svg.selectAll("body") //add rectangles to all data
-        .data(randomData) //provide finals as dataset
-        .enter()
-        .append("rect")
-        .attr("y", function (d) {
-                return height - yscale(d.amount);
-        })
-        .attr("height", function (d) {
-                return yscale(d.amount);
-        })
-        .attr("width", barwidth)
-        .attr("transform", function (d, i) {
-                let translate = [100 + barwidth * i, -30];
-                return "translate(" + translate + ")";
-        })
-        .attr("fill", 'Red');;
+// svg.selectAll("body") //add rectangles to all data
+//         .data(randomData) //provide finals as dataset
+//         .enter()
+//         .append("rect")
+//         .attr("y", function (d) {
+//                 return height - yscale(d.amount);
+//         })
+//         .attr("height", function (d) {
+//                 return yscale(d.amount);
+//         })
+//         .attr("width", barwidth)
+//         .attr("transform", function (d, i) {
+//                 let translate = [100 + barwidth * i, -30];
+//                 return "translate(" + translate + ")";
+//         })
+//         .attr("fill", 'black');;
 
 svg.selectAll("body") //add rectangles to all data
         .data(nestedData) //provide finals as dataset
@@ -205,7 +170,3 @@ svg.selectAll("body") //add rectangles to all data
 
 
         });
-
-
-
-
