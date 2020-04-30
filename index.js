@@ -1,165 +1,192 @@
 //1. What the bar chart should represent -- Data
-//2. Add CSS - colours
 //3. Add Filters
-//4. Add Transitions
+//1. Average Data {done}
+//2. Draw Bar Chart {done}
 
-//1. Average Data
-//2. Draw Bar Chart
+
+
+// Var controls counter
+var counter = 1990;
+document.getElementById("counter").innerHTML = counter;
+
+
 
 let dataPath = "data/energy.csv";
 d3.csv(dataPath)
         .then(function (data) {
 
-                let finals = [];
-
-                //Array of regions
-                var westArray = [];
-                var midWestArray = [];
-                var southWestArray = [];
-                var southEastArray = [];
-                var northEastArray = [];
                 //console.log(data);
 
-                //Filter Data into new object
-                //Data length is 51,630 rows
-                for (let i = 0; i < data.length; i++) {
-                        if (data[i].year == 1990 && data[i].region == "west" && data[i].type == "Total Electric Power Industry") {
-                                randomData.push({
-                                        region: data[i].region,
-                                        amount: parseInt(data[i].amount),
-                                        type: data[i].energySrc,
-                                })
-                        }
-                }
-                //console.log(finals);
+                //Nested Data with all Data Required - need to figure out how to unpack and build bar chart
 
-
-
-
-                //Grouping by region
-                // from line 1 to line 51,630 "j's"
-                for(let j=0; j < data.length; j++) { 
-
-                                if (data[j].type == "Total Electric Power Industry") {
-
-                                        if(data[j].region == "West" || data[j].region == "west"){
-                                                westArray.push({
-                                                        year: data[j].year,
-                                                        region: data[j].region,
-                                                        type: data[j].energySrc,
-                                                        amount: parseInt(data[j].amount)
-                                                })
-                                                console.log("End of WEST");
-                                               
-                                               
-                                             
-                                        } 
-
-                                        else if (data[j].region == "MidWest" || data[j].region == "Midwest"){
-                                                midWestArray.push({
-                                                        year: data[j].year,
-                                                        region: data[j].region,
-                                                        type: data[j].energySrc,
-                                                        amount: parseInt(data[j].amount)
-                                                })
-                                                console.log("End of MIDWEST");
-                                        }       
-                                               
-                                        else if (data[j].region == "SouthWest" || data[j].region == "Southwest"){
-                                                southWestArray.push({
-                                                        year: data[j].year,
-                                                        region: data[j].region,
-                                                        type: data[j].energySrc,
-                                                        amount: parseInt(data[j].amount)
-                                                })
-                                                console.log("End of SOUTHWEST");
-                                        }       
-                                        else if (data[j].region == "SouthEast" || data[j].region == "Southeast"){
-                                                southEastArray.push({
-                                                        year: data[j].year,
-                                                        region: data[j].region,
-                                                        type: data[j].energySrc,
-                                                        amount: parseInt(data[j].amount)
-                                                })
-                                                console.log("End of SOUTHEAST");
-                                        }
-                                        else if (data[j].region == "NorthEast" || data[j].region == "Northeast"){
-                                                northEastArray.push({
-                                                        year: data[j].year,
-                                                        region: data[j].region,
-                                                        type: data[j].energySrc,
-                                                        amount: parseInt(data[j].amount)
-                                                         })
-                                                console.log("END OF NORTHEAST");
-                                        }
-                                        else{
-                                                console.log("MISSING DATA MISSING DATA") //region names are misspelled
-                                                
-                                        }
-                                        
-                        
-
+                var nestedData = d3.nest()
+                        .key(function (d) {
+                                return d.year;
+                        })
+                        .key(function (d) {
+                                if (d.region != "combined" && d.type == "Total Electric Power Industry") {
+                                        return d.region;
                                 }
+                        })
+                        .key(function (d) {
+                                if (d.energySrc == "Coal" || d.energySrc == "Petroleum" || d.energySrc == "Natural Gas" || d.energySrc == "Solar Thermal and Photovoltaic") {
+                                        return d.energySrc;
+                                }
+                        })
+                        .rollup(function (v) {
+                                console.log(v.energySrc);
+                                return {
+                                        //energy: v.energySrc,
+                                        avg: d3.mean(v, function (d) {
+                                                return parseInt(d.amount);
+                                        })
+                                };
+                        })
+                        .entries(data);
+                //console.log(nestedData);
+                let nestedDataJSON = JSON.stringify(nestedData);
+                //console.log(nestedDataJSON);
+                
+                let dataAfterNest = [];
+
+                //Object - 18 elements 
+                // each element should have dataAfterNest for each year
+
+                
+                let getNestedData = nestedData.forEach(function(d){ //d = year
+                        let yearLevel = [];
+                        if(d.key == 1990) {
+                        yearLevel.push({year: d.key});
+                        (d.values).forEach(function(e){ //e = region
+                                (e.values).forEach(function(f){ //f = energySrc
+                                        dataAfterNest.push({
+                                                energy: f.key,
+                                                avg: f.value.avg,
+                                                region: e.key,
+                                                year: d.key
+                                        })
+                                })
+                                        // dataAfterNest.push({
+                                        //         f.key: f.value.avg
+                                        // })
+                                        //return {f.key: f.value.avg};
+                                
+                                        //put all of the values in this array 
+                        }) 
                 }
-                console.log(westArray);
+                });
+                console.log(getNestedData);
+                console.log(dataAfterNest);
+
+
+
+
+
+
+
+                //OR nest by year after this
+                //Scale Bands for bar chart --> categorical (x), amount (y)
+                //First scale for region and second for energy - create nested scale
                 
 
-                
 
 
-                let width = 1000;
-                let height = 500;
-                let margin = 3;
-                let barwidth = (width / nestedData.length);
-
-                //Append to HTML Document
-                let svg = d3.select("body")
-                        .append("svg")
-                        .attr("height", height)
-                        .attr("width", width);
-
-                /**
-                 * Scales and Axis
-                 */
-
-                let yscale = d3.scaleLinear()
-                        .domain([0, d3.max(randomData, d => d.amount)])
-                        .range([0, height]);
-
-                let yAxisScale = d3.scaleLinear()
-                        .domain([0, d3.max(randomData, d => d.amount)])
-                        .range([height, 0]);
-
-                // Y Axis - Number
-                let y_axis = d3.axisLeft().scale(yAxisScale);
-                svg.append("g")
-                        .attr("transform", "translate(100,-30)")
-                        .call(y_axis)
-
-                //X Axis - Ordinal
-                // let x_axis = d3.axisBottom().scale(xscale);
-                // var ordinalScale = d3.scale.ordinal()
-                //         .domain(['Alice', 'Bob'])
-                //         .range([0, 100]);
 
 
-                //Barchart
-                svg.selectAll("body") //add rectangles to all data
-                        .data(randomData) //provide finals as dataset
-                        .enter()
-                        .append("rect")
-                        .attr("y", function (d) {
-                                return height - yscale(d.amount);
-                        })
-                        .attr("height", function (d) {
-                                return yscale(d.amount);
-                        })
-                        .attr("width", barwidth)
-                        .attr("transform", function (d, i) {
-                                let translate = [100 + barwidth * i, -30];
-                                return "translate(" + translate + ")";
-                        })
-                        .attr("fill", 'black');;
+
+let randomData = [];
+
+// //Filter Data into new object
+for (let i = 0; i < data.length; i++) {
+        if (data[i].year == 1990 && data[i].region == "west" && data[i].type == "Total Electric Power Industry") {
+                randomData.push({
+                        region: data[i].region,
+                        amount: parseInt(data[i].amount),
+                        type: data[i].energySrc,
+                })
+        }
+}
+
+let width = 1000;
+let height = 500;
+let margin = 3;
+let barwidth = (width / nestedData.length);
+
+//Append to HTML Document
+let svg = d3.select("body")
+        .append("svg")
+        .attr("height", height)
+        .attr("width", width);
+
+/**
+ * Scales and Axis
+ */
+
+
+let yscale = d3.scaleLinear()
+        .domain([0, d3.max(randomData, d => d.amount)])
+        .range([0, height]);
+
+let yAxisScale = d3.scaleLinear()
+        .domain([0, d3.max(randomData, d => d.amount)])
+        .range([height, 0]);
+
+// Y Axis - Number
+let y_axis = d3.axisLeft().scale(yAxisScale);
+svg.append("g")
+        .attr("transform", "translate(100,-30)")
+        .call(y_axis);
+
+//X Axis - Ordinal
+// let x_axis = d3.axisBottom().scale(xscale);
+// var ordinalScale = d3.scale.ordinal()
+//         .domain(['Alice', 'Bob'])
+//         .range([0, 100]);
+
+
+//Barchart
+//NEED TICKS
+svg.selectAll("body") //add rectangles to all data
+        .data(randomData) //provide finals as dataset
+        .enter()
+        .append("rect")
+        .attr("y", function (d) {
+                return height - yscale(d.amount);
+        })
+        .attr("height", function (d) {
+                return yscale(d.amount);
+        })
+        .attr("width", barwidth)
+        .attr("transform", function (d, i) {
+                let translate = [100 + barwidth * i, -30];
+                return "translate(" + translate + ")";
+        })
+        .attr("fill", 'Red');;
+
+svg.selectAll("body") //add rectangles to all data
+        .data(nestedData) //provide finals as dataset
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", function (d) {
+                return d.key;
+        })
+        .attr("y", function (d) {
+                return d.values.map(function (d) {
+                        return d.values[0].amount;
+                }).values[0];
+        })
+        .attr("height", function (d) {
+                return d.values.map(function (d) {
+                        return yscale(d.values[0].amount);
+                }).values[0];
+        })
+        .attr("width", barwidth)
+        .attr("transform", function (d, i) {
+                let translate = [100 + barwidth * i, -30];
+                return "translate(" + translate + ")";
+        })
+        .attr("fill", 'black');;
 
                 // Barchart Text
                 // let text = svg.selectAll("text")
@@ -177,41 +204,8 @@ d3.csv(dataPath)
                 //         })
 
 
-                        //    /**
-        //          * Boundaries
-        //          */
-        //         let dateBoundaries = d3.extent(data, function (d) {
-        //                 return parseFloat(d.year);
-        //         });
-
-        //         let energyBoundaries = d3.extent(data, function (d) {
-        //                 return parseFloat(d.amount);
-        //         });
-
-
-
-                //Averages (rollup example)
-                var energyAvgType = d3.nest()
-                        .key(function (d) {
-                                return d.type;
-                        })
-                        .rollup(function (v) {
-                                return d3.mean(v, function (d) {
-                                        return d.amount;
-                                });
-                        })
-                        .entries(data);
-
-                /**
-                 * Combined USTOTAL Energy Use split by year, type and energy source
-                 */
-                let usTotal = d3.nest()
-                        .key(function (d) {
-                                return d.year;
-                        })
-                        .entries(data);
-                usTotal.shift();
-                //console.log(usTotal);
-
-
         });
+
+
+
+
