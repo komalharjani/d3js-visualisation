@@ -90,7 +90,6 @@ svg.append("g")
 
 
 //Barchart
-//NEED TICKS
 svg.selectAll("body") //add rectangles to all data
         .data(randomData) //provide finals as dataset
         .enter()

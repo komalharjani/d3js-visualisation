@@ -90,23 +90,22 @@ svg.append("g")
 
 
 //Barchart
-//NEED TICKS
-svg.selectAll("body") //add rectangles to all data
-        .data(randomData) //provide finals as dataset
-        .enter()
-        .append("rect")
-        .attr("y", function (d) {
-                return height - yscale(d.amount);
-        })
-        .attr("height", function (d) {
-                return yscale(d.amount);
-        })
-        .attr("width", barwidth)
-        .attr("transform", function (d, i) {
-                let translate = [100 + barwidth * i, -30];
-                return "translate(" + translate + ")";
-        })
-        .attr("fill", 'black');;
+// svg.selectAll("body") //add rectangles to all data
+//         .data(randomData) //provide finals as dataset
+//         .enter()
+//         .append("rect")
+//         .attr("y", function (d) {
+//                 return height - yscale(d.amount);
+//         })
+//         .attr("height", function (d) {
+//                 return yscale(d.amount);
+//         })
+//         .attr("width", barwidth)
+//         .attr("transform", function (d, i) {
+//                 let translate = [100 + barwidth * i, -30];
+//                 return "translate(" + translate + ")";
+//         })
+//         .attr("fill", 'black');;
 
 svg.selectAll("body") //add rectangles to all data
         .data(nestedData) //provide finals as dataset
