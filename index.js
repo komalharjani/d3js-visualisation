@@ -10,11 +10,9 @@ var counter = 1990;
 document.getElementById("counter").innerHTML = counter;
 
 
-//vars for totals
-var year = 1989; 
-var coal = 0;
-var petrol = 0;
-var gas = 0;
+//Year starts at 1990
+var objYear = 1989; 
+
 
 let dataPath = "data/energy.csv";
 d3.csv(dataPath)
@@ -24,18 +22,20 @@ d3.csv(dataPath)
                 var nestedData = d3.nest()
                         .key(function (d) {
 
-                                if (d.type != "combined" && d.type == "Total Electric Power Industry") {
+                                if ( d.type == "Total Electric Power Industry") {
                                         return d.region;
                                 }
                                
                         })
                         .key(function (d) {
-                                year++; //next year
+                                objYear++; //starts in 1990 then goes to next year
                                 return d.year;
+                                
                                 
                         })
                         .key(function (d) {
                                 if (d.energySrc == "Coal" || d.energySrc == "Petroleum" || d.energySrc == "Natural Gas" || d.energySrc == "Solar Thermal and Photovoltaic") {
+                                        
                                         return d.energySrc;
                                 }
                         })
@@ -47,9 +47,18 @@ d3.csv(dataPath)
                                 };
                         })
                         .entries(data);
-                console.log(nestedData);
-                let nestedDataJSON = JSON.stringify(nestedData, null, 2);
-                console.log (nestedDataJSON);
+
+                        //regions codes: [0]west, [1]undefined, [2]southeast, [3]southwest, [4]northeast, [5]midwest, [6] "", [7]combined
+                        //year codes: [0]1990 to [28]2018
+                        //energySrc codes: [0]undefined, [1]Coal, [2]Natural Gas, [3]Petroleum, [4]Solar Thermal and Photovoltaic
+
+                        console.log(nestedData[0].values[0].values[1].value); // equivalent to: west, 1990, Coal, 1160158.0833
+                        console.log(nestedData[0].values[1].values[1].value); //equivalent to: west, 1991, Coal, 11903090.583333334
+
+
+                        console.log(nestedData);
+                        //let nestedDataJSON = JSON.stringify(nestedData, null, 2);
+                        //console.log (nestedDataJSON);
 
                 // Whats this?
                 //var eachPain = d3.values(nestedData[0]).values[0];
@@ -67,6 +76,9 @@ for (let i = 0; i < data.length; i++) {
                 })
         }
 }
+
+
+
 
 let width = 1000;
 let height = 500;
