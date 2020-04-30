@@ -10,8 +10,6 @@ let dataPath = "data/energy.csv";
 d3.csv(dataPath)
         .then(function (data) {
 
-                console.log(data);
-
                 //A table for each year - region - energySrc
                 //Nested Data with all Data Required - need to figure out how to unpack and build bar chart
                 var nestedData = d3.nest()
@@ -29,9 +27,7 @@ d3.csv(dataPath)
                                 }
                         })
                         .rollup(function (v) {
-                                console.log(v.energySrc);
                                 return {
-                                        //energy: v.energySrc,
                                         avg: d3.mean(v, function (d) {
                                                 return parseInt(d.amount);
                                         })
@@ -40,43 +36,8 @@ d3.csv(dataPath)
                         .entries(data);
                 console.log(nestedData);
                 let nestedDataJSON = JSON.stringify(nestedData);
-                //console.log(nestedDataJSON);
-                
-                let dataAfterNest = [];
+                console.log(nestedDataJSON);
 
-                //Object - 18 elements 
-                // each element should have dataAfterNest for each year
-
-                //If For Year
-                let getNestedData = nestedData.forEach(function(d){ //d = year
-                        let yearLevel = [];
-                        if(d.key == 1990) {
-                        yearLevel.push({year: d.key});
-                        (d.values).forEach(function(e){ //e = region
-                                (e.values).forEach(function(f){ //f = energySrc
-                                        dataAfterNest.push({
-                                                energy: f.key,
-                                                avg: f.value.avg,
-                                                region: e.key,
-                                                year: d.key
-                                        })
-                                })
-                                        // dataAfterNest.push({
-                                        //         f.key: f.value.avg
-                                        // })
-                                        //return {f.key: f.value.avg};
-                                
-                                        //put all of the values in this array 
-                        }) 
-                }
-                });
-                console.log(getNestedData);
-                console.log(dataAfterNest);
-
-                //OR nest by year after this
-                //Scale Bands for bar chart --> categorical (x), amount (y)
-                //First scale for region and second for energy - create nested scale
-                
 
 
                 //Loop through each nest

@@ -57,8 +57,8 @@ d3.csv(dataPath)
                                         dataAfterNest.push({
                                                 energy: f.key,
                                                 avg: f.value.avg,
-                                                region: e.key,
-                                                year: d.key
+                                                //region: e.key,
+                                                //year: d.key
                                         })
                                 })
                                         // dataAfterNest.push({
