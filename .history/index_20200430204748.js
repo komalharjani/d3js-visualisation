@@ -36,8 +36,13 @@ d3.csv(dataPath)
                 console.log(nestedData);
                 let nestedDataJSON = JSON.stringify(nestedData);
 
-                var eachPain = d3.values(nestedData[0]).values[0];
-                console.log(eachPain);
+                var eachPain = d3.values(nestedData[0])
+                        .map(function (d) {
+                                return d.key;
+                        });
+                        console.log(eachPain);
+
+console.log(eachPain);
 
 let randomData = [];
 
