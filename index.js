@@ -8,10 +8,17 @@ d3.csv(dataPath)
         .then(function (data) {
 
                 let finals = [];
-                let temp = [];
-                console.log(data);
+
+                //Array of regions
+                var westArray = [];
+                var midWestArray = [];
+                var southWestArray = [];
+                var southEastArray = [];
+                var northEastArray = [];
+                //console.log(data);
 
                 //Filter Data into new object
+                //Data length is 51,630 rows
                 for (let i = 0; i < data.length; i++) {
                         if (data[i].region == "Combined" && data[i].year == 1990) {
                                 finals.push({
@@ -22,20 +29,79 @@ d3.csv(dataPath)
                 }
                 //console.log(finals);
 
-                for(let j=0; j < data.length; j++) {
-                        let year = 1990;
-                        if(data[j].year == year) {
-                        if(data[j].energySrc == "Coal" || data[j].energySrc == "Petroleum") {
-                                temp.push({
-                                        amount: parseInt(data[j].amount),
-                                        type: data[j].energySrc,
-                                        region: data[j].region
-                                })
-                        }
-                        year = year + 1;
+
+
+                var totalWest = 0;
+                var totalWind = 0;
+
+                //Grouping by region
+                // from line 1 to line 51,630 "j's"
+                for(let j=0; j < data.length; j++) { 
+
+                                if (data[j].type == "Total Electric Power Industry") {
+
+                                        if(data[j].region == "West" || data[j].region == "west"){
+                                                westArray.push({
+                                                        year: data[j].year,
+                                                        region: data[j].region,
+                                                        type: data[j].energySrc,
+                                                        amount: parseInt(data[j].amount)
+                                                })
+                                                console.log("End of WEST");
+                                                totalWest = data[j].amount++; //all energy from west gen.
+                                               
+                                             
+                                        } 
+
+                                        else if (data[j].region == "MidWest" || data[j].region == "Midwest"){
+                                                midWestArray.push({
+                                                        year: data[j].year,
+                                                        region: data[j].region,
+                                                        type: data[j].energySrc,
+                                                        amount: parseInt(data[j].amount)
+                                                })
+                                                console.log("End of MIDWEST");
+                                        }       
+                                               
+                                        else if (data[j].region == "SouthWest" || data[j].region == "Southwest"){
+                                                southWestArray.push({
+                                                        year: data[j].year,
+                                                        region: data[j].region,
+                                                        type: data[j].energySrc,
+                                                        amount: parseInt(data[j].amount)
+                                                })
+                                                console.log("End of SOUTHWEST");
+                                        }       
+                                        else if (data[j].region == "SouthEast" || data[j].region == "Southeast"){
+                                                southEastArray.push({
+                                                        year: data[j].year,
+                                                        region: data[j].region,
+                                                        type: data[j].energySrc,
+                                                        amount: parseInt(data[j].amount)
+                                                })
+                                                console.log("End of SOUTHEAST");
+                                        }
+                                        else if (data[j].region == "NorthEast" || data[j].region == "Northeast"){
+                                                northEastArray.push({
+                                                        year: data[j].year,
+                                                        region: data[j].region,
+                                                        type: data[j].energySrc,
+                                                        amount: parseInt(data[j].amount)
+                                                         })
+                                                console.log("END OF NORTHEAST");
+                                        }
+                                        else{
+                                                console.log("MISSING DATA MISSING DATA") //region names are misspelled
+                                                
+                                        }
+                                        
+                        
+
+                                }
                 }
-                }
-                console.log(temp);
+                
+
+                
 
 
                 let width = 1000;
@@ -155,7 +221,7 @@ d3.csv(dataPath)
                         })
                         .entries(data);
                 usTotal.shift();
-                console.log(usTotal);
+                //console.log(usTotal);
 
 
         });
