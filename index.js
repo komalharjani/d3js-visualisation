@@ -60,23 +60,40 @@ d3.csv(dataPath)
                         //let nestedDataJSON = JSON.stringify(nestedData, null, 2);
                         //console.log (nestedDataJSON);
 
-                // Whats this?
+
+                        
+                /* Whats this?
                 //var eachPain = d3.values(nestedData[0]).values[0];
                 //console.log(eachPain);
+                */
+                
 
-let randomData = [];
 
-// //Filter Data into new object
-for (let i = 0; i < data.length; i++) {
-        if (data[i].year == 1990 && data[i].region == "west" && data[i].type == "Total Electric Power Industry") {
-                randomData.push({
-                        region: data[i].region,
-                        amount: parseInt(data[i].amount),
-                        type: data[i].energySrc,
-                })
+                
+                
+                
+
+
+//VISUAL DATA HERE
+
+
+let coalBar = [];
+
+
+        // //Filter coal averages into new obj for all regions
+        for (let i = 0; i < 29; i++) { //years: wont exit until all years are reached
+                /*
+                for(let r =0; r ,5; r++){ //regions interation test
+                        r++;
+                }
+                */
+                var coalData = nestedData[0].values[i].values[1].value; // testing west[0], iterate through years,coal stays at 1.
+
+                coalBar.push({
+                        coalData     
+                })   
         }
-}
-
+        console.log(coalBar); //prints all averages for coal each year
 
 
 
@@ -102,11 +119,11 @@ let svg = d3.select("body")
 
 
 let yscale = d3.scaleLinear()
-        .domain([0, d3.max(randomData, d => d.amount)])
+        .domain([0, d3.max(coalBar, d => d.amount)])
         .range([0, height]);
 
 let yAxisScale = d3.scaleLinear()
-        .domain([0, d3.max(randomData, d => d.amount)])
+        .domain([0, d3.max(coalBar, d => d.amount)])
         .range([height, 0]);
 
 // Y Axis - Number
