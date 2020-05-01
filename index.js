@@ -52,11 +52,11 @@ d3.csv(dataPath)
                         //year codes: [0]1990 to [28]2018
                         //energySrc codes: [0]undefined, [1]Coal, [2]Natural Gas, [3]Petroleum, [4]Solar Thermal and Photovoltaic
 
-                        console.log(nestedData[0].values[0].values[1].value); // equivalent to: west, 1990, Coal, 1160158.0833
+                        console.log(nestedData[0].values[0].values[1].value); // equivalent to: west, 1990, Coal, 11860158.0833
                         console.log(nestedData[0].values[1].values[1].value); //equivalent to: west, 1991, Coal, 11903090.583333334
 
 
-                        console.log(nestedData);
+                        //console.log(nestedData);
                         //let nestedDataJSON = JSON.stringify(nestedData, null, 2);
                         //console.log (nestedDataJSON);
 
@@ -75,25 +75,47 @@ d3.csv(dataPath)
 
 
 //VISUAL DATA HERE
+//var r;
+// var e; 
+//allWestArray
+//allMidwestArray
 
-
-let coalBar = [];
+let coalAvgWest = [];
 
 
         // //Filter coal averages into new obj for all regions
         for (let i = 0; i < 29; i++) { //years: wont exit until all years are reached
-                /*
-                for(let r =0; r ,5; r++){ //regions interation test
-                        r++;
+                /*KEEP and review
+                for(r =0; r<8; r++){ //regions interation
+                        (if r = 0){ // [0] region west
+                             for (e=0;e<5; e++ ){ //iterate through energySrc and append to region //No bc, would need to map location of e anyways but all source averages would be in a single array. vars seem more straighforward.
+                                //allAvgWest = nestedData[r].values[i].values[e].value;
+                                allWestArray.push{
+                                        allAvgMidWest;
+                                 
+                        }
+                        
+                             (if r = 1){ //[1] region midwest 
+                                for (e= 0;e<5; e++ ){
+                                //allAvgMidWest = nestedData[r].values[i].values[e].value; 
+                                allMidWestArray.push
+                                        allAvgMidwest //this would be a global
+                                }
+                        
+                        }
+                        (if r = 2){ // [2]region 
+                                //do the same as above until r=5 and dont forget else
+
                 }
+        }
                 */
                 var coalData = nestedData[0].values[i].values[1].value; // testing west[0], iterate through years,coal stays at 1.
 
-                coalBar.push({
+                coalAvgWest.push({
                         coalData     
                 })   
         }
-        console.log(coalBar); //prints all averages for coal each year
+        console.log(coalAvgWest); //prints all averages for coal each year in west.
 
 
 
@@ -119,11 +141,11 @@ let svg = d3.select("body")
 
 
 let yscale = d3.scaleLinear()
-        .domain([0, d3.max(coalBar, d => d.amount)])
+        .domain([0, d3.max(coalAvgWest, d => d.amount)])
         .range([0, height]);
 
 let yAxisScale = d3.scaleLinear()
-        .domain([0, d3.max(coalBar, d => d.amount)])
+        .domain([0, d3.max(coalAvgWest, d => d.amount)])
         .range([height, 0]);
 
 // Y Axis - Number
