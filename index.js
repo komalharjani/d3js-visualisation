@@ -85,7 +85,7 @@ let coalAvgWest = [];
 
         // //Filter coal averages into new obj for all regions
         for (let i = 0; i < 29; i++) { //years: wont exit until all years are reached
-                /*KEEP and review
+                /*  //a single region array containing all avg energytypes each year
                 for(r =0; r<8; r++){ //regions interation
                         (if r = 0){ // [0] region west
                              for (e=0;e<5; e++ ){ //iterate through energySrc and append to region //No bc, would need to map location of e anyways but all source averages would be in a single array. vars seem more straighforward.
