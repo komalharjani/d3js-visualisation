@@ -1,156 +1,198 @@
-//1. What the bar chart should represent -- Data
-//2. Add CSS - colours
-//3. Add Filters
-//4. Add Transitions
-
-//1. Average Data
-//2. Draw Bar Chart
-
+//INSERT DATA HERE
 let dataPath = "data/energy.csv";
 d3.csv(dataPath)
-        .then(function (data) {
+    .then(function (data) {
 
-                //Nested Data with all Data Required - need to figure out how to unpack and build bar chart
-                var nestedData = d3.nest()
-                        .key(function (d) {
-                                return d.year;
-                        })
-                        .key(function (d) {
-                                if (d.region != "combined" && d.type == "Total Electric Power Industry") {
-                                        return d.region;
-                                }
-                        })
-                        .key(function (d) {
-                                if (d.energySrc == "Coal" || d.energySrc == "Petroleum" || d.energySrc == "Natural Gas" || d.energySrc == "Solar Thermal and Photovoltaic") {
-                                        return d.energySrc;
-                                }
-                        })
-                        .rollup(function (v) {
-                                return {
-                                        avg: d3.mean(v, function (d) {
-                                                return parseInt(d.amount);
-                                        })
-                                };
-                        })
-                        .entries(data);
-                console.log(nestedData);
-                let nestedDataJSON = JSON.stringify(nestedData);
+        //Nest Data into desired Format --> YEAR --> Region --> EnergySrc, Averages for Each EnergySrc
+        var nestedData = d3.nest()
+            .key(function (d) {
+                return d.year;
+            })
+            .key(function (d) {
+                if (d.region != "combined" && d.type == "Total Electric Power Industry") {
+                    return d.region;
+                }
+            })
+            .key(function (d) {
+                if (d.energySrc == "Coal" || d.energySrc == "Petroleum" || d.energySrc == "Natural Gas" || d.energySrc == "Solar Thermal and Photovoltaic") {
+                    return d.energySrc;
+                }
+            })
+            //Form Averages for Each Year
+            .rollup(function (v) {
+                return {
+                    avg: d3.mean(v, function (d) {
+                        return parseInt(d.amount);
+                    })
+                };
+            })
+            .entries(data);
 
-                var eachPain = d3.values(nestedData[0]).values[0];
-                console.log(eachPain);
 
-let randomData = [];
 
-// //Filter Data into new object
-for (let i = 0; i < data.length; i++) {
-        if (data[i].year == 1990 && data[i].region == "west" && data[i].type == "Total Electric Power Industry") {
-                randomData.push({
-                        region: data[i].region,
-                        amount: parseInt(data[i].amount),
-                        type: data[i].energySrc,
+            var slider = document.getElementById("myRange");
+            var output = document.getElementById("demo");
+            output.innerHTML = slider.value;
+            let selectedYear=2005;
+            
+           
+
+            
+            
+           
+        
+            
+          
+
+
+
+
+
+
+            //change d.key -- based on dropdown input value
+        //Filter Data so that 
+        let filteredData = [];
+        let getNestedData = nestedData.forEach(function (d) { //d = year
+            if (d.key == selectedYear) { //IF WANT ALL DATA FOR ALL YEARS REMOVE THIS
+                (d.values).forEach(function (e) { //e = region
+                    (e.values).forEach(function (f) { //f = energySrc
+                        if (e.key !== "undefined" && f.key !== "undefined") {
+                            filteredData.push({
+                                region: e.key,
+                                year: d.key,
+                                energy: f.key,
+                                avg: f.value.avg,
+                            })
+                        }
+                    })
                 })
-        }
-}
-
-let width = 1000;
-let height = 500;
-let margin = 3;
-let barwidth = (width / nestedData.length);
-
-//Append to HTML Document
-let svg = d3.select("body")
-        .append("svg")
-        .attr("height", height)
-        .attr("width", width);
-
-
-
-
-
-
-/**
- * Scales and Axis
- */
-
-
-let yscale = d3.scaleLinear()
-        .domain([0, d3.max(randomData, d => d.amount)])
-        .range([0, height]);
-
-let yAxisScale = d3.scaleLinear()
-        .domain([0, d3.max(randomData, d => d.amount)])
-        .range([height, 0]);
-
-// Y Axis - Number
-let y_axis = d3.axisLeft().scale(yAxisScale);
-svg.append("g")
-        .attr("transform", "translate(100,-30)")
-        .call(y_axis)
-
-//X Axis - Ordinal
-// let x_axis = d3.axisBottom().scale(xscale);
-// var ordinalScale = d3.scale.ordinal()
-//         .domain(['Alice', 'Bob'])
-//         .range([0, 100]);
-
-
-//Barchart
-// svg.selectAll("body") //add rectangles to all data
-//         .data(randomData) //provide finals as dataset
-//         .enter()
-//         .append("rect")
-//         .attr("y", function (d) {
-//                 return height - yscale(d.amount);
-//         })
-//         .attr("height", function (d) {
-//                 return yscale(d.amount);
-//         })
-//         .attr("width", barwidth)
-//         .attr("transform", function (d, i) {
-//                 let translate = [100 + barwidth * i, -30];
-//                 return "translate(" + translate + ")";
-//         })
-//         .attr("fill", 'black');;
-
-svg.selectAll("body") //add rectangles to all data
-        .data(nestedData) //provide finals as dataset
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", function (d) {
-                return d.key;
-        })
-        .attr("y", function (d) {
-                return d.values.map(function (d) {
-                        return d.values[0].amount;
-                }).values[0];
-        })
-        .attr("height", function (d) {
-                return d.values.map(function (d) {
-                        return yscale(d.values[0].amount);
-                }).values[0];
-        })
-        .attr("width", barwidth)
-        .attr("transform", function (d, i) {
-                let translate = [100 + barwidth * i, -30];
-                return "translate(" + translate + ")";
-        })
-        .attr("fill", 'black');;
-
-                // Barchart Text
-                // let text = svg.selectAll("text")
-                //         .data(finals)
-                //         .enter()
-                //         .append("text")
-                //         .text(function (d) {
-                //                 return d.amount;
-                //         })
-                //         .attr("y", function (d, i) {
-                //                 return height - xscale(d.amount) - 2;
-                //         })
-                //         .attr("x", function (d, i) {
-                //                 return barwidth * i;
-                //         })
-
-
+           }
         });
+
+
+        slider.oninput = function() {
+                output.innerHTML = this.value;
+                selectedYear = slider.value;
+                console.log(selectedYear);
+                d3.select("svg").remove();
+
+
+        let currData = d3.nest() 
+            .key(function (d) {
+                return d.region;
+            })
+            .entries(filteredData);
+        console.log(currData);
+
+
+        var margin = { top: 20, right: 20, bottom: 30, left: 100 },
+            width = 800 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+
+        var x0 = d3.scaleBand().rangeRound([0, width], .5);
+        var x1 = d3.scaleBand();
+        var y = d3.scaleLinear().rangeRound([height, 0]);
+
+        var xAxis = d3.axisBottom().scale(x0)
+            .tickFormat(currData.key)
+            .tickValues(currData.map(d => d.key));
+
+        var yAxis = d3.axisLeft().scale(y);
+
+        const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+     
+        var svg = d3.select('body').append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var categoriesNames = currData.map(function (d) { return d.key; });
+        var rateNames = currData[0].values.map(function (d) { return d.energy; });
+
+        x0.domain(categoriesNames);
+        x1.domain(rateNames).rangeRound([0, x0.bandwidth()]);
+        y.domain([0, d3.max(currData, function (key) { return d3.max(key.values, function (d) { return d.avg; }); })]);
+
+        console.log(y.domain());
+
+        console.log(currData.key);
+
+       
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .style('opacity', '0')
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .style('font-weight', 'bold')
+            .text("Value");
+
+        svg.select('.y').transition().duration(500).delay(1300).style('opacity', '1');
+
+
+        var slice = svg.selectAll(".slice")
+            .data(currData)
+            .enter().append("g")
+            .attr("class", "g")
+            .attr("transform", function (d) { return "translate(" + x0(d.key) + ",0)"; });
+
+        
+        slice.selectAll("rect")
+            .data(function (d) { return d.values; })
+            .enter().append("rect")
+            .attr("width", x1.bandwidth())
+            .attr("x", function (d) { return x1(d.energy); })
+            .style("fill", function (d) { return color(d.energy) })
+            .attr("y", function (d) { return y(0); })
+            .attr("height", function (d) { return height - y(0); })
+            .on("mouseover", function (d) {
+                d3.select(this).style("fill", d3.rgb(color(d.energy)).darker(2));
+            })
+            .on("mouseout", function (d) {
+                d3.select(this).style("fill", color(d.energy));
+            });
+
+        slice.selectAll("rect")
+            .transition()
+            .delay(function (d) { return Math.random() * 1000; })
+            .duration(1000)
+            .attr("y", function (d) { return y(d.avg); })
+            .attr("height", function (d) { return height - y(d.avg); });
+
+        var legend = svg.selectAll(".legend")
+            .data(currData[0].values.map(function (d) { return d.energy; }))
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function (d, i) { return "translate(0," + i * 20 + ")"; })
+            .style("opacity", "0");
+
+
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", function (d) { return color(d); });
+
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function (d) { return d; });
+
+        legend.transition().duration(500).delay(function (d, i) { return 1300 + 100 * i; }).style("opacity", "1");
+        
+        }
+
+    });
