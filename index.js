@@ -33,30 +33,31 @@ d3.csv(dataPath)
             var slider = document.getElementById("myRange");
             var output = document.getElementById("demo");
             output.innerHTML = slider.value;
-            let selectedYear=2005;
-            
-           
-
             
             
            
-        
+
             
-          
+            
 
 
 
-
-
+        //collects filterted region by year data and renders graph
+        slider.onchange = function() {
+                var selectedYear = document.getElementById("myRange").value;
+                output.innerHTML = this.value;
+               
 
             //change d.key -- based on dropdown input value
         //Filter Data so that 
         let filteredData = [];
         let getNestedData = nestedData.forEach(function (d) { //d = year
             if (d.key == selectedYear) { //IF WANT ALL DATA FOR ALL YEARS REMOVE THIS
+                console.log(selectedYear);
                 (d.values).forEach(function (e) { //e = region
                     (e.values).forEach(function (f) { //f = energySrc
                         if (e.key !== "undefined" && f.key !== "undefined") {
+                                
                             filteredData.push({
                                 region: e.key,
                                 year: d.key,
@@ -69,20 +70,17 @@ d3.csv(dataPath)
            }
         });
 
-
-        slider.oninput = function() {
-                output.innerHTML = this.value;
-                selectedYear = slider.value;
-                console.log(selectedYear);
-                d3.select("svg").remove();
-
-
+                
         let currData = d3.nest() 
             .key(function (d) {
+                console.log("THIS IS: " +d.year);
                 return d.region;
             })
             .entries(filteredData);
-        console.log(currData);
+                console.log(currData);
+                console.log(selectedYear);
+                d3.select("svg").remove();
+                
 
 
         var margin = { top: 20, right: 20, bottom: 30, left: 100 },
