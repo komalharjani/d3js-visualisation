@@ -71,17 +71,21 @@ d3.csv(dataPath)
                 }
             });
 
-
-            
+        
+            //currData gathers all regions
             let currData = d3.nest()
                 .key(function (d) {
                     console.log("THIS IS: " + d.year);
-                    return d.region;
+                    return d.region;//return region by region
+                    
                 })
-                .entries(filteredData);
-            console.log(currData);
+                .entries(filteredData); 
+            console.log(currData); //all regions gathered
             console.log(selectedYear);
             d3.select("svg").remove();
+
+
+
 
 
     
@@ -157,6 +161,11 @@ d3.csv(dataPath)
             var durations = 1000
             var afterLoad = () => durations = 750;
 
+
+
+
+
+
            
 
             updateGraph();
@@ -166,14 +175,7 @@ d3.csv(dataPath)
             //update graph per selectedYear
             function updateGraph() {
 
-                var data = currData;
     
-                /*
-                //put data chosen here
-                data = d3.select('#selection')
-                .property('value') == "First" ? data_set : data_set2
-                */
-      
 
                 var slice = svg.selectAll(".slice")
                     .data(currData);
@@ -215,7 +217,7 @@ d3.csv(dataPath)
                     .attr("bY", function (d) { return y(d.key) }) //d.currData displays next height y
 
 
-
+            
                 //set rectangle spacing here
                 slice.selectAll("rect")
                     .data(function (d) { return d.values; })
@@ -231,6 +233,12 @@ d3.csv(dataPath)
                     .on("mouseout", function (d) {
                         d3.select(this).style("fill", color(d.energy));
                     });
+
+ 
+
+
+
+                    
 
 
                 //render new graph on after removal of previous
