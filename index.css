@@ -5,6 +5,7 @@ body {
   right: 0;
   left: 0;
   background-color: whitesmoke;
+  
 }
 
 span {
@@ -35,7 +36,7 @@ background-color: whitesmoke;
 padding: 5px;
 font-size: 20px;
 text-align: center;
-background: #ca0020;
+background: #92c5de;
 color: whitesmoke;
 }
 
@@ -53,67 +54,6 @@ color: whitesmoke;
 }
 
 .bar {
-<<<<<<< HEAD
-    background-color: aquamarine;
-    padding: 3px;
-    margin: 1px;
-}
-
-body {
-    font: 10px sans-serif;
-  }
-  
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-  
-  .x.axis path {
-    display: none;
-  }
-  
-
-.slider {
-    -webkit-appearance: none;
-    width: 40%;
-    height: 10px;
-    border-radius: 5px;
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-  }
-  
-  .slider:hover {
-    opacity: 1;
-  }
-  
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-  }
-  
-  .slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 10%;
-    background: #4CAF50;
-    cursor: pointer;
-  }
-
-  .slidecontainer {
-    width: 20%;
-    padding: 10px;
-  }
-=======
   background-color: aquamarine;
 }
 
@@ -166,5 +106,18 @@ body {
   width: 20%;
   padding: 10px;
 }
->>>>>>> b7c5a29564801078c7b6cb1fb20fb29bc1eaffba
+
+
+/* legend css */
+/*HTML Vertical Lengend*/
+#legend {display: none;}
+#legend { list-style: none; float: right; padding: 0; margin: 0; }
+#legend li { margin: 0 0 10px 0; padding: 0 0 0 12px; }
+#legend li { margin-right: 250px; }
+#legend h3 {font: 10px sans-serif;}
+#legend div { width: 100%; background-color: whitesmoke; padding-left: 2px; }
+#legend .coal { background-color: #ca0020; }
+#legend .nuclear { background-color: #f4a582; }
+#legend .naturalGas { background-color: #d5d5d5; }
+#legend .solar { background-color: #92c5de; }
 
