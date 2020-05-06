@@ -1,4 +1,4 @@
-//INSERT DATA HERE
+
 let dataPath = "data/energy.csv";
 d3.csv(dataPath)
     .then(function (data) {
@@ -34,11 +34,14 @@ d3.csv(dataPath)
             var output = document.getElementById("demo");
             output.innerHTML = slider.value;
             
+            var svg,x0,x1,y;
             
-           
+      
+        
 
-            
-            
+
+
+
 
 
 
@@ -49,7 +52,6 @@ d3.csv(dataPath)
                
 
             //change d.key -- based on dropdown input value
-        //Filter Data so that 
         let filteredData = [];
         let getNestedData = nestedData.forEach(function (d) { //d = year
             if (d.key == selectedYear) { //IF WANT ALL DATA FOR ALL YEARS REMOVE THIS
@@ -70,82 +72,137 @@ d3.csv(dataPath)
            }
         });
 
-                
-        let currData = d3.nest() 
-            .key(function (d) {
-                console.log("THIS IS: " +d.year);
-                return d.region;
-            })
-            .entries(filteredData);
-                console.log(currData);
-                console.log(selectedYear);
-                d3.select("svg").remove();
-                
 
 
-        var margin = { top: 20, right: 20, bottom: 30, left: 100 },
-            width = 800 - margin.left - margin.right,
-            height = 400 - margin.top - margin.bottom;
 
 
-        var x0 = d3.scaleBand().rangeRound([0, width], .5);
-        var x1 = d3.scaleBand();
-        var y = d3.scaleLinear().rangeRound([height, 0]);
 
-        var xAxis = d3.axisBottom().scale(x0)
-            .tickFormat(currData.key)
-            .tickValues(currData.map(d => d.key));
+    //selected data to be visualize
+    let currData = d3.nest() 
+    .key(function (d) {
+        console.log("THIS IS: " +d.year);
+        return d.region;
+    })
+    .entries(filteredData);
+        console.log(currData);
+        console.log(selectedYear);
+        d3.select("svg").remove();
+        
 
-        var yAxis = d3.axisLeft().scale(y);
-
-        const color = d3.scaleOrdinal(d3.schemeCategory10);
-
+         
      
-        var svg = d3.select('body').append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+     //SVG section
+     //size of svg (scale, legend, and bar graph)
+     var margin = { top: 20, right: 20, bottom: 30, left: 100 },
+     width = 800 - margin.left - margin.right,
+     height = 400 - margin.top - margin.bottom;
+     
+     
+     x0 = d3.scaleBand().rangeRound([0, width], .5);
+     x1 = d3.scaleBand();
+     y = d3.scaleLinear().rangeRound([height, 0]);
+     
+     var xAxis = d3.axisBottom().scale(x0)
+     .tickFormat(currData.key)
+     .tickValues(currData.map(d => d.key));
+     
+     var yAxis = d3.axisLeft().scale(y);
+     
+     const color = d3.scaleOrdinal(d3.schemeCategory10);
+     
+                 
+                 svg = d3.select('body').append("svg")
+                 .attr("width", width + margin.left + margin.right)
+                 .attr("height", height + margin.top + margin.bottom)
+                 .append("g")
+                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+     
+             var categoriesNames = currData.map(function (d) { return d.key; });
+             var rateNames = currData[0].values.map(function (d) { return d.energy; });
+     
+             x0.domain(categoriesNames);
+             x1.domain(rateNames).rangeRound([0, x0.bandwidth()]);
+             y.domain([0, d3.max(currData, function (key) { return d3.max(key.values, function (d) { return d.avg; }); })]);
+     
+             console.log(y.domain());
+     
+             console.log(currData.key);
+     
+            
+             svg.append("g")
+                 .attr("class", "x axis") //x axis point for instance
+                 .attr("transform", "translate(0," + height + ")")
+                 .call(xAxis);
+             
+     
+             svg.append("g")
+                 .attr("class", "y axis") //y axis point for instance
+                 .style('opacity', '0')
+                 .call(yAxis)
+                 .append("text")
+                 .attr("transform", "rotate(-90)")
+                 .attr("y", 6)
+                 .attr("dy", ".71em")
+                 .style("text-anchor", "end")
+                 .style('font-weight', 'bold')
+                 .text("Value");
+     
+             svg.select('.y').transition().duration(500).delay(1300).style('opacity', '1');
+     
+         
+             
 
-        var categoriesNames = currData.map(function (d) { return d.key; });
-        var rateNames = currData[0].values.map(function (d) { return d.energy; });
+    
+        var durations = 0
+        var afterLoad = () => durations = 750;
+        
+        updateGraph();
 
-        x0.domain(categoriesNames);
-        x1.domain(rateNames).rangeRound([0, x0.bandwidth()]);
-        y.domain([0, d3.max(currData, function (key) { return d3.max(key.values, function (d) { return d.avg; }); })]);
 
-        console.log(y.domain());
 
-        console.log(currData.key);
 
-       
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
 
-        svg.append("g")
-            .attr("class", "y axis")
-            .style('opacity', '0')
-            .call(yAxis)
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .style('font-weight', 'bold')
-            .text("Value");
-
-        svg.select('.y').transition().duration(500).delay(1300).style('opacity', '1');
-
+        //UPDATES THE GRAPH
+        //update graph per selectedYear
+        function updateGraph(){
+        
+      
 
         var slice = svg.selectAll(".slice")
-            .data(currData)
-            .enter().append("g")
-            .attr("class", "g")
-            .attr("transform", function (d) { return "translate(" + x0(d.key) + ",0)"; });
+        .data([data],function(d){ return d.ser1 });
 
-        
+        //gathers data of all 5 regions and displays by selectedYear
+        slice = slice
+            .data(currData)
+            .enter()
+            .append("g")
+            .attr("class", "slice") //change slice back to "g"
+            .attr("transform", function (d) { return "translate(" + x0(d.key) + ",0)"; }) //gather next 4 regions
+            .merge(slice);
+
+            slice.exit().remove()
+
+            slice.transition()
+            .duration(durations)
+            .attr("bX1", function(d, i) { return x0(d.selectedYear) }) //ser 1 is current slider year
+            .attr("bX2", function(d, i) { return x1(d.selectedYear) }) 
+            .attr("bY", function(d) { return y(d.selectedYear) }) //ser 2 is the next year selected on slider
+      
+
+
+
+               // Call the X axis
+    svg.selectAll(".axis.axis--x").transition()
+    .duration(durations)
+    .call(xAxis);
+
+  // Call the Y axis
+  svg.selectAll(".axis.axis--y").transition()
+    .duration(durations)
+     .call(yAxis);
+
+
+        //Add data points and tool tips
         slice.selectAll("rect")
             .data(function (d) { return d.values; })
             .enter().append("rect")
@@ -161,6 +218,7 @@ d3.csv(dataPath)
                 d3.select(this).style("fill", color(d.energy));
             });
 
+       
         slice.selectAll("rect")
             .transition()
             .delay(function (d) { return Math.random() * 1000; })
@@ -192,5 +250,8 @@ d3.csv(dataPath)
         legend.transition().duration(500).delay(function (d, i) { return 1300 + 100 * i; }).style("opacity", "1");
         
         }
+        afterLoad();
 
+    }
+        
     });
