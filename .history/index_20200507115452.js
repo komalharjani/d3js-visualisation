@@ -62,6 +62,7 @@ d3.csv(dataPath)
             }
         }
 
+
         /**
          * When user submits their desired ranges - the svg is removed and entered again based on updated info 
          */

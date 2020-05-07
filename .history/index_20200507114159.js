@@ -25,7 +25,7 @@ d3.csv(dataPath)
                 }
             })
 
-            //Form Averages for Each Year
+            //form Averages for Each Year
             .rollup(function (v) {
                 return {
                     avg: d3.mean(v, function (d) {
@@ -61,6 +61,7 @@ d3.csv(dataPath)
                 x.style.display = "block";
             }
         }
+
 
         /**
          * When user submits their desired ranges - the svg is removed and entered again based on updated info 
@@ -129,7 +130,7 @@ d3.csv(dataPath)
             //size of svg (scale, legend, and bar graph)
             margin = { top: 20, right: 20, bottom: 30, left: 100 },
                 width = 1000 - margin.left - margin.right,
-                height = 390 - margin.top - margin.bottom;
+                height = 400 - margin.top - margin.bottom;
 
             regionNames = currData.map(function (d) { return d.key; }); //region names
             energyNames = currData[0].values.map(function (d) { return d.energy; }); //energy names
@@ -144,9 +145,10 @@ d3.csv(dataPath)
                 .tickFormat(currData.key)
                 .tickValues(currData.map(d => d.key));
             yAxis = d3.axisLeft().scale(y);
+            //const color = d3.scaleOrdinal(d3.schemeCategory10); //color of bars
             const color = d3.scaleOrdinal().range(["#ca0020", "#f4a582", "#d5d5d5", "#92c5de", "#0571b0"]);
 
-            //Build SVG
+            //bar graph
             svg = d3.select('body').append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -160,44 +162,52 @@ d3.csv(dataPath)
             svg.append("g")
                 .attr("class", "axis axis--y")
 
-            //X axis label:
+                // Add X axis label:
             svg.append("text")
-                .attr("text-anchor", "end")
-                .attr("x", width / 2)
-                .attr("y", height + 28)
-                .text("Regions");
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", height +20)
+            .text("X axis title");
 
-            //Y Axis label
-            svg.append("text")
-                .attr("text-anchor", "end")
-                .attr("transform", "rotate(-90)")
-                .attr("y", -margin.left+20)
-                .attr("x", -margin.top - 45)
-                .text("Average Annual Energy Consumption (MgWH)")
 
             svg.select('.y').transition().duration(500).delay(1300).style('opacity', '1');
+
+
+
 
             var durations = 1000
             var afterLoad = () => durations = 750;
 
             updateGraph();
 
-            //update graph based on user selection
+            //UPDATES THE GRAPH
+            //update graph per selectedYear
             function updateGraph() {
+
+                var data = currData;
+
+                /*
+                //put data chosen here
+                data = d3.select('#selection')
+                .property('value') == "First" ? data_set : data_set2
+                */
 
                 var slice = svg.selectAll(".slice")
                     .data(currData);
+
 
                 //region name spacing control
                 x0.domain(regionNames);
                 x1.domain(energyNames).rangeRound([0, x0.bandwidth(), 10]);//location of energy name
                 y.domain([0, d3.max(currData, function (key) { return d3.max(key.values, function (d) { return d.avg; }); })]);
 
+                //REMOVE If not figured
                 // Call the X axis to transition
                 svg.selectAll(".axis.axis--x").transition()
                     .duration(durations)
                     .call(xAxis);
 
+                //REMOVE if not figured
                 // Call the Y axis to transition
                 svg.selectAll(".axis.axis--y").transition()
                     .duration(durations)
@@ -207,17 +217,19 @@ d3.csv(dataPath)
                 slice = slice
                     .enter()
                     .append("g")
-                    .attr("class", "slice")
+                    .attr("class", "slice") //change slice back to "g"
                     .attr("transform", function (d) { return "translate(" + x0(d.key) + ",0)"; }) //gather next 4 regions
                     .merge(slice);
 
 
+                //REMOVE if not figured out
                 //Attempt to make smooth transition from graph to new graph
                 slice.transition()
                     .duration(durations)
                     .attr("bX1", function (d) { return x0(d.key) }) //d.currData displays next height x
                     .attr("bX2", function (d) { return x1(d.key) })//d.currData displays next height x2
                     .attr("bY", function (d) { return y(d.key) }) //d.currData displays next height y
+
 
 
                 //set rectangle spacing here
@@ -244,6 +256,7 @@ d3.csv(dataPath)
                     .duration(durations)
                     .attr("y", function (d) { return y(d.avg); })
                     .attr("height", function (d) { return height - y(d.avg); });
+
 
             }
             afterLoad();

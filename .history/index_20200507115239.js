@@ -25,7 +25,7 @@ d3.csv(dataPath)
                 }
             })
 
-            //Form Averages for Each Year
+            //form Averages for Each Year
             .rollup(function (v) {
                 return {
                     avg: d3.mean(v, function (d) {
@@ -61,6 +61,7 @@ d3.csv(dataPath)
                 x.style.display = "block";
             }
         }
+
 
         /**
          * When user submits their desired ranges - the svg is removed and entered again based on updated info 
@@ -185,19 +186,30 @@ d3.csv(dataPath)
             //update graph based on user selection
             function updateGraph() {
 
+                var data = currData;
+
+                /*
+                //put data chosen here
+                data = d3.select('#selection')
+                .property('value') == "First" ? data_set : data_set2
+                */
+
                 var slice = svg.selectAll(".slice")
                     .data(currData);
+
 
                 //region name spacing control
                 x0.domain(regionNames);
                 x1.domain(energyNames).rangeRound([0, x0.bandwidth(), 10]);//location of energy name
                 y.domain([0, d3.max(currData, function (key) { return d3.max(key.values, function (d) { return d.avg; }); })]);
 
+                //REMOVE If not figured
                 // Call the X axis to transition
                 svg.selectAll(".axis.axis--x").transition()
                     .duration(durations)
                     .call(xAxis);
 
+                //REMOVE if not figured
                 // Call the Y axis to transition
                 svg.selectAll(".axis.axis--y").transition()
                     .duration(durations)
@@ -207,17 +219,19 @@ d3.csv(dataPath)
                 slice = slice
                     .enter()
                     .append("g")
-                    .attr("class", "slice")
+                    .attr("class", "slice") //change slice back to "g"
                     .attr("transform", function (d) { return "translate(" + x0(d.key) + ",0)"; }) //gather next 4 regions
                     .merge(slice);
 
 
+                //REMOVE if not figured out
                 //Attempt to make smooth transition from graph to new graph
                 slice.transition()
                     .duration(durations)
                     .attr("bX1", function (d) { return x0(d.key) }) //d.currData displays next height x
                     .attr("bX2", function (d) { return x1(d.key) })//d.currData displays next height x2
                     .attr("bY", function (d) { return y(d.key) }) //d.currData displays next height y
+
 
 
                 //set rectangle spacing here
@@ -244,6 +258,7 @@ d3.csv(dataPath)
                     .duration(durations)
                     .attr("y", function (d) { return y(d.avg); })
                     .attr("height", function (d) { return height - y(d.avg); });
+
 
             }
             afterLoad();

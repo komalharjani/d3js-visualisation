@@ -14,6 +14,7 @@
         <div class="header">
             <h2>Welcome to InfoVis Practical 3 </h2>
         </div>
+        
     </header>
 
     <div class="card">
@@ -27,6 +28,13 @@
                 <p>End Year: <span id="maxValue"></span> </p>
                 <input id="yearSubmit" type="submit" value="OK" />
             </div>
+            <ul id="legend">
+                <h3> <b>Legend</b></h3>
+                <li class="coal"><div>Coal</div></li>
+                <li class="nuclear"><div>Nuclear</div></li>
+                <li class="naturalGas"><div>Natural Gas</div></li>
+                <li class="solar"><div>Solar</div></li>
+            </ul>
         </div>
         <div class="leftcolumn">
             <h2>Welcome to Our Visualisation</h2>
@@ -36,19 +44,9 @@
                 <p><b> X-Axis: Regional Analysis:</b> Since the data was aggregated by states, we decided to introduce a region variable which would focus on consumption by the main regions in the US in order to keep the visual concise and easy to read. This is represented on the X-axis.</p>
             <p><b> Data Source:</b> US Energy Information Administration (2018)</p>
         </div>
-    </div>
-
-    <div class="legContainer">
-    <ul id="legend">
-        <h3> <b>Legend</b></h3>
-        <li class="coal"><div>Coal</div></li>
-        <li class="nuclear"><div>Nuclear</div></li>
-        <li class="naturalGas"><div>Natural Gas</div></li>
-        <li class="solar"><div>Solar</div></li>
-    </ul>
-    </div>
-
 </body>
+
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="index.js"></script>
+
 </html>

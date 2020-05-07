@@ -25,7 +25,7 @@ d3.csv(dataPath)
                 }
             })
 
-            //Form Averages for Each Year
+            //form Averages for Each Year
             .rollup(function (v) {
                 return {
                     avg: d3.mean(v, function (d) {
@@ -61,6 +61,7 @@ d3.csv(dataPath)
                 x.style.display = "block";
             }
         }
+
 
         /**
          * When user submits their desired ranges - the svg is removed and entered again based on updated info 
@@ -212,12 +213,14 @@ d3.csv(dataPath)
                     .merge(slice);
 
 
+                //REMOVE if not figured out
                 //Attempt to make smooth transition from graph to new graph
                 slice.transition()
                     .duration(durations)
                     .attr("bX1", function (d) { return x0(d.key) }) //d.currData displays next height x
                     .attr("bX2", function (d) { return x1(d.key) })//d.currData displays next height x2
                     .attr("bY", function (d) { return y(d.key) }) //d.currData displays next height y
+
 
 
                 //set rectangle spacing here
@@ -244,6 +247,7 @@ d3.csv(dataPath)
                     .duration(durations)
                     .attr("y", function (d) { return y(d.avg); })
                     .attr("height", function (d) { return height - y(d.avg); });
+
 
             }
             afterLoad();
